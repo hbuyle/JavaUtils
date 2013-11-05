@@ -7,6 +7,39 @@ import java.util.Map.Entry;
 import java.util.PriorityQueue;
 
 public class HuffmanCompressionUtil {
+	
+	
+	public HuffmanTree buildTree(char[] chars) {
+		
+		final Map<Character, Integer> counts = countOccurences(chars);
+		
+		// in order to construct the tree we add all individual nodes into a priority queue...
+		final PriorityQueue<HuffmanTree> queue = new PriorityQueue<>(100,
+				new Comparator<HuffmanTree>() {
+			
+			@Override
+			public int compare(HuffmanTree o1, HuffmanTree o2) {
+				return o1.compareTo(o2);
+			}
+		});
+		for (Entry<Character, Integer> e : counts.entrySet()) {
+			queue.add(new HuffmanTree(new Node(e.getKey(), e.getValue(), null,
+					null)));
+		}
+		
+		// ... and then merge the two smallest sub-trees together and put it back into the queue...
+		while (queue.size() > 1) {
+			final HuffmanTree first = queue.poll();
+			final HuffmanTree second = queue.poll();
+			final Node newRoot = new Node(null, first.getRoot().getOccurence()
+					+ second.getRoot().getOccurence(), first.getRoot(),
+					second.getRoot());
+			queue.add(new HuffmanTree(newRoot));
+		}
+		
+		// ... until only one tree is left
+		return queue.poll();
+	}
 
 	/**
 	 * Compresses a string using a previously generated huffman tree.
@@ -79,37 +112,6 @@ public class HuffmanCompressionUtil {
 
 	}
 
-	private HuffmanTree buildTree(char[] chars) {
-
-		final Map<Character, Integer> counts = countOccurences(chars);
-		
-		// in order to construct the tree we add all individual nodes into a priority queue...
-		final PriorityQueue<HuffmanTree> queue = new PriorityQueue<>(100,
-				new Comparator<HuffmanTree>() {
-
-					@Override
-					public int compare(HuffmanTree o1, HuffmanTree o2) {
-						return o1.compareTo(o2);
-					}
-				});
-		for (Entry<Character, Integer> e : counts.entrySet()) {
-			queue.add(new HuffmanTree(new Node(e.getKey(), e.getValue(), null,
-					null)));
-		}
-
-		// ... and then merge the two smallest sub-trees together and put it back into the queue...
-		while (queue.size() > 1) {
-			final HuffmanTree first = queue.poll();
-			final HuffmanTree second = queue.poll();
-			final Node newRoot = new Node(null, first.getRoot().getOccurence()
-					+ second.getRoot().getOccurence(), first.getRoot(),
-					second.getRoot());
-			queue.add(new HuffmanTree(newRoot));
-		}
-		
-		// ... until only one tree is left
-		return queue.poll();
-	}
 
 	private Map<Character, Integer> countOccurences(char[] chars) {
 		final Map<Character, Integer> counts = new HashMap<>();
