@@ -116,11 +116,7 @@ public class HuffmanCompressionUtil {
 	private Map<Character, Integer> countOccurences(char[] chars) {
 		final Map<Character, Integer> counts = new HashMap<>();
 		for (char c : chars) {
-			if (counts.containsKey(c)) {
-				counts.put(c, counts.get(c).intValue() + 1);
-			} else {
-				counts.put(c, 1);
-			}
+			counts.merge(c, 1, Integer::sum);
 		}
 		return counts;
 	}
