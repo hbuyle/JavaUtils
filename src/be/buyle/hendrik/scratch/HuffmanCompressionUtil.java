@@ -58,6 +58,12 @@ public class HuffmanCompressionUtil {
 		StringBuilder message = new StringBuilder();
 		int pointer = 0;
 		Node curNode = tree.getRoot();
+		if (curNode.getValue() != null) {
+			for (int i = 0; i < compressed.length(); i++) {
+				message.append(curNode.getValue());
+			}
+			return message.toString();
+		}
 		while (pointer < compressed.length()) {
 			if (curNode.getValue() == null) {
 				if (compressed.charAt(pointer) == '0') {
@@ -88,6 +94,13 @@ public class HuffmanCompressionUtil {
 		System.out.println("compressed: " + compressed);
 		String output = compressionUtil.decompress(tree, compressed);
 		System.out.println("output: " + output);
+		String repeated = "aaaa";
+		final HuffmanTree repeatedTree = compressionUtil.buildTree(repeated.toCharArray());
+		String repeatedCompressed = compressionUtil.compress(repeatedTree, repeated);
+		String repeatedOutput = compressionUtil.decompress(repeatedTree, repeatedCompressed);
+		System.out.println("repeated input: " + repeated);
+		System.out.println("repeated compressed: " + repeatedCompressed);
+		System.out.println("repeated output: " + repeatedOutput);
 	}
 
 	private Map<Character, String> createMappingTable(HuffmanTree tree) {
@@ -103,7 +116,7 @@ public class HuffmanCompressionUtil {
 	private void visitTree(Map<Character, String> map, String value, Node root) {
 		if (root.getValue() != null) {
 			// this is a leaf ;
-			map.put(root.getValue(), value);
+			map.put(root.getValue(), value.isEmpty() ? "0" : value);
 		} else {
 			// non-leaf
 			if (root.getLeftChild() != null) {
