@@ -7,21 +7,14 @@ import java.util.Map.Entry;
 import java.util.PriorityQueue;
 
 public class HuffmanCompressionUtil {
-	
+	private static final Comparator<HuffmanTree> TREE_ORDER = Comparator.naturalOrder();
 	
 	public HuffmanTree buildTree(char[] chars) {
 		
 		final Map<Character, Integer> counts = countOccurences(chars);
 		
 		// in order to construct the tree we add all individual nodes into a priority queue...
-		final PriorityQueue<HuffmanTree> queue = new PriorityQueue<>(100,
-				new Comparator<HuffmanTree>() {
-			
-			@Override
-			public int compare(HuffmanTree o1, HuffmanTree o2) {
-				return o1.compareTo(o2);
-			}
-		});
+		final PriorityQueue<HuffmanTree> queue = new PriorityQueue<>(100, TREE_ORDER);
 		for (Entry<Character, Integer> e : counts.entrySet()) {
 			queue.add(new HuffmanTree(new Node(e.getKey(), e.getValue(), null,
 					null)));
