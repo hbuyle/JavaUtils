@@ -60,10 +60,17 @@ public class HuffmanCompressionUtil {
 		Node curNode = tree.getRoot();
 		while (pointer < compressed.length()) {
 			if (curNode.getValue() == null) {
-				if (compressed.charAt(pointer) == '0') {
+				char bit = compressed.charAt(pointer);
+				if (bit != '0' && bit != '1') {
+					throw new IllegalArgumentException("Invalid bit value in compressed input: " + bit);
+				}
+				if (bit == '0') {
 					curNode = curNode.getLeftChild();
 				} else {
 					curNode = curNode.getRightChild();
+				}
+				if (curNode == null) {
+					throw new IllegalArgumentException("Invalid bit sequence for Huffman tree.");
 				}
 				pointer++;
 			} else {
