@@ -71,6 +71,10 @@ public class HuffmanCompressionUtil {
 				curNode = tree.getRoot();
 			}
 		}
+		if (curNode.getValue() == null) {
+			// malformed input: decompression ended without reaching a leaf node
+			throw new IllegalArgumentException("Malformed compressed input.");
+		}
 		message.append(curNode.getValue());
 		return message.toString();
 	}
