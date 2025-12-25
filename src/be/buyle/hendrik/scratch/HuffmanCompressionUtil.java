@@ -130,7 +130,12 @@ public class HuffmanCompressionUtil {
 
 		final StringBuilder sb = new StringBuilder();
 		for (char c : uncompressed) {
-			sb.append(mappingTable.get(c));
+			String code = mappingTable.get(c);
+			if (code == null) {
+				throw new IllegalArgumentException(
+						"Missing Huffman code for character: " + c);
+			}
+			sb.append(code);
 		}
 		return sb.toString();
 	}
